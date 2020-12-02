@@ -151,7 +151,7 @@ String URL_temp, URL_humi, URL_airp;
 float bme280_pressure;
 int pressure_sl;
 
-String URL_PRESL = "http://192.168.67.240:8087/getPlainValue/daswetter.0.NextHours.Location_1.Day_1.pressure_value";  //reference for pressure at sea level for altitude
+String URL_PRESL = "http://192.168.1.240:8087/getPlainValue/daswetter.0.NextHours.Location_1.Day_1.pressure_value";  //reference for pressure at sea level for altitude
 
 //+++++++++++++++++++++++++++++++++++++++++ SCD30 section +++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
