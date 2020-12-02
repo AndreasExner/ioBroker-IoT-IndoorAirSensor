@@ -1,12 +1,12 @@
 /*
 
-  particulate matter sensor / AQI sensor for iobroker IoT Framework
+  Indoor air sensor for iobroker IoT Framework
 
-  Version: V5.0 (release)
+  Version: F5_1.3 (release)
   Date: 2020-11-30
 
   This sketch has several prerquisites discribed in the documentation of the repository:
-  https://github.com/AndreasExner/ioBroker-IoT-PM_AQI-Sensor
+  https://github.com/AndreasExner/ioBroker-IoT-IndoorAirSensor
   
   This sketch is based on my ioBroker IoT Framework V5
   https://github.com/AndreasExner/ioBroker-IoT-Framework
