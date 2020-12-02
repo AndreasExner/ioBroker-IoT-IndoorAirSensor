@@ -309,20 +309,18 @@ void loop(void) {
       get_wifi_state();
       send_ip();
 
+      get_dynamic_config();
+      build_urls();
+      
       if (sensor_active && BME280_activated && BME680_activated  && SCD30_activated) {send_data();}
       if (sensor_active && BME680_activated) {BME680_reset();}
 
       if (sensor_active && BME680_activated == false) {BME680_setup();}
       if (sensor_active && BME280_activated == false) {BME280_setup();}
       if (sensor_active && SCD30_activated == false) {SCD30_setup();}
-      
-      get_dynamic_config();
-      build_urls();
 
       if (sensor_active && BME280_activated) {BME280_get_sealevel_pressure();}
       if (sensor_active && SCD30_activated) {SCD30_AutoCal();}
-
-      
 
       get_interval();
       counter = interval;
