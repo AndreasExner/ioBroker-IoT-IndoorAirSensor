@@ -1,0 +1,419 @@
+{
+  "0_userdata.0.IoT-Dev.IndoorAirSensor.BME680_eraseEEPROM": {
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.BME680_eraseEEPROM",
+    "type": "state",
+    "common": {
+      "name": "BME680_eraseEEPROM",
+      "role": "",
+      "type": "boolean",
+      "read": true,
+      "write": true,
+      "custom": {
+        "sql.0": {
+          "enabled": true,
+          "changesOnly": false,
+          "debounce": 0,
+          "maxLength": 10,
+          "retention": "2678400",
+          "changesRelogInterval": 0,
+          "changesMinDelta": 0,
+          "storageType": "",
+          "aliasId": "",
+          "counter": false
+        }
+      }
+    },
+    "native": {},
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator",
+      "state": 1636
+    }
+  },
+  "0_userdata.0.IoT-Dev.IndoorAirSensor.BME680_loadState": {
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.BME680_loadState",
+    "type": "state",
+    "common": {
+      "name": "BME680_loadState",
+      "role": "",
+      "type": "boolean",
+      "read": true,
+      "write": true
+      "custom": {
+        "sql.0": {
+          "enabled": true,
+          "changesOnly": false,
+          "debounce": 0,
+          "maxLength": 10,
+          "retention": "2678400",
+          "changesRelogInterval": 0,
+          "changesMinDelta": 0,
+          "storageType": "",
+          "aliasId": "",
+          "counter": false
+        }
+      }
+    },
+    "native": {},
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator",
+      "state": 1636
+    }
+  },
+  "0_userdata.0.IoT-Dev.IndoorAirSensor.BME680_reset": {
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.BME680_reset",
+    "type": "state",
+    "common": {
+      "name": "BME680_reset",
+      "role": "",
+      "type": "boolean",
+      "read": true,
+      "write": true
+    },
+    "native": {},
+    "from": "system.adapter.admin.0",
+    "user": "system.user.admin",
+    "ts": 1605869903693,
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator",
+      "state": 1636
+    }
+  },
+  "0_userdata.0.IoT-Dev.IndoorAirSensor.BME680_updateState": {
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.BME680_updateState",
+    "type": "state",
+    "common": {
+      "name": "BME680_updateState",
+      "role": "",
+      "type": "boolean",
+      "read": true,
+      "write": true,
+      "custom": {
+        "sql.0": {
+          "enabled": true,
+          "changesOnly": false,
+          "debounce": 0,
+          "maxLength": 10,
+          "retention": "2678400",
+          "changesRelogInterval": 0,
+          "changesMinDelta": 0,
+          "storageType": "",
+          "aliasId": "",
+          "counter": false
+        }
+      }
+    },
+    "native": {},
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator",
+      "state": 1636
+    }
+  },
+  "0_userdata.0.IoT-Dev.IndoorAirSensor.Interval": {
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.Interval",
+    "type": "state",
+    "common": {
+      "name": "Interval",
+      "role": "",
+      "type": "number",
+      "read": true,
+      "write": true
+    },
+    "native": {},
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator",
+      "state": 1636
+    }
+  },
+  "0_userdata.0.IoT-Dev.IndoorAirSensor.SCD30_autoCal": {
+    "common": {
+      "name": "SCD30_autoCal",
+      "role": "",
+      "type": "boolean",
+      "read": true,
+      "write": true
+    },
+    "native": {},
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator",
+      "state": 1636
+    },
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.SCD30_autoCal",
+    "type": "state"
+  },
+  "0_userdata.0.IoT-Dev.IndoorAirSensor.SensorID": {
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.SensorID",
+    "type": "state",
+    "common": {
+      "name": "IoT.LQI_Unit02.SensorID",
+      "role": "",
+      "type": "number",
+      "desc": "Manuell erzeugt",
+      "read": true,
+      "write": true
+    },
+    "native": {},
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator",
+      "state": 1636
+    }
+  },
+  "0_userdata.0.IoT-Dev.IndoorAirSensor.VOCe": {
+    "common": {
+      "name": "VOC Equivalent",
+      "role": "",
+      "type": "number",
+      "unit": "mg/m³",
+      "read": true,
+      "write": true,
+      "custom": {
+        "sql.0": {
+          "enabled": true,
+          "changesOnly": false,
+          "debounce": "1000",
+          "retention": "63072000",
+          "changesRelogInterval": 0,
+          "changesMinDelta": 0,
+          "storageType": "",
+          "aliasId": "",
+          "counter": false
+        }
+      }
+    },
+    "native": {},
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator",
+      "state": 1636
+    },
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.VOCe",
+    "type": "state"
+  },
+  "0_userdata.0.IoT-Dev.IndoorAirSensor.airp": {
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.airp",
+    "type": "state",
+    "common": {
+      "name": "Luftdruck",
+      "role": "",
+      "type": "number",
+      "unit": "mbar",
+      "read": true,
+      "write": true
+    },
+    "native": {},
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator",
+      "state": 1636
+    }
+  },
+  "0_userdata.0.IoT-Dev.IndoorAirSensor.co2": {
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.co2",
+    "type": "state",
+    "common": {
+      "name": "CO2",
+      "role": "",
+      "type": "number",
+      "unit": "ppm",
+      "read": true,
+      "write": true,
+      "custom": {
+        "sql.0": {
+          "enabled": true,
+          "changesOnly": false,
+          "debounce": "1000",
+          "retention": "63072000",
+          "changesRelogInterval": 0,
+          "changesMinDelta": 0,
+          "storageType": "",
+          "aliasId": "",
+          "counter": false
+        }
+      }
+    },
+    "native": {},
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator",
+      "state": 1636
+    }
+  },
+  "0_userdata.0.IoT-Dev.IndoorAirSensor.humi": {
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.humi",
+    "type": "state",
+    "common": {
+      "name": "Relative Luftfeuchte",
+      "role": "",
+      "type": "number",
+      "unit": "%",
+      "read": true,
+      "write": true,
+      "custom": {
+        "sql.0": {
+          "enabled": true,
+          "changesOnly": false,
+          "debounce": "1000",
+          "retention": "63072000",
+          "changesRelogInterval": 0,
+          "changesMinDelta": 0,
+          "storageType": "",
+          "aliasId": "",
+          "counter": false
+        }
+      }
+    },
+    "native": {},
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator",
+      "state": 1636
+    }
+  },
+  "0_userdata.0.IoT-Dev.IndoorAirSensor.iaDA": {
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.iaDA",
+    "type": "state",
+    "common": {
+      "name": "Dynamic IAQ Accuracy",
+      "role": "",
+      "type": "number",
+      "read": true,
+      "write": true
+    },
+    "native": {},
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator",
+      "state": 1636
+    }
+  },
+  "0_userdata.0.IoT-Dev.IndoorAirSensor.iaSA": {
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.iaSA",
+    "type": "state",
+    "common": {
+      "name": "Static IAQ Accuracy",
+      "role": "",
+      "type": "number",
+      "read": true,
+      "write": true,
+      "custom": {
+        "sql.0": {
+          "enabled": true,
+          "changesOnly": true,
+          "debounce": "1000",
+          "retention": "31536000",
+          "changesRelogInterval": "60",
+          "changesMinDelta": 0,
+          "storageType": "",
+          "aliasId": "",
+          "counter": false
+        }
+      }
+    },
+    "native": {},
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator",
+      "state": 1636
+    }
+  },
+  "0_userdata.0.IoT-Dev.IndoorAirSensor.iaqD": {
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.iaqD",
+    "type": "state",
+    "common": {
+      "name": "Dynamic IAQ",
+      "role": "",
+      "type": "number",
+      "read": true,
+      "write": true
+    },
+    "native": {},
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator",
+      "state": 1636
+    }
+  },
+  "0_userdata.0.IoT-Dev.IndoorAirSensor.iaqS": {
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.iaqS",
+    "type": "state",
+    "common": {
+      "name": "Static IAQ",
+      "role": "",
+      "type": "number",
+      "read": true,
+      "write": true,
+      "custom": {
+        "sql.0": {
+          "enabled": true,
+          "changesOnly": false,
+          "debounce": "1000",
+          "retention": "63072000",
+          "changesRelogInterval": 0,
+          "changesMinDelta": 0,
+          "storageType": "",
+          "aliasId": "",
+          "counter": false
+        }
+      }
+    },
+    "native": {},
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator",
+      "state": 1636
+    }
+  },
+  "0_userdata.0.IoT-Dev.IndoorAirSensor.temp": {
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.temp",
+    "type": "state",
+    "common": {
+      "name": "Temperatur",
+      "role": "",
+      "type": "number",
+      "unit": "°C",
+      "read": true,
+      "write": true,
+      "custom": {
+        "sql.0": {
+          "enabled": true,
+          "changesOnly": false,
+          "debounce": "1000",
+          "retention": "63072000",
+          "changesRelogInterval": 0,
+          "changesMinDelta": 0,
+          "storageType": "",
+          "aliasId": "",
+          "counter": false
+        }
+      }
+    },
+    "native": {},
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator",
+      "state": 1636
+    }
+  }
+}
