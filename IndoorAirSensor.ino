@@ -2,13 +2,13 @@
 
   Indoor air sensor for iobroker IoT Framework
 
-  Version: F5_1.3 (release)
-  Date: 2020-11-30
+  Version: F5_1.3.1 (release)
+  Date: 2020-12-03
 
   This sketch has several prerquisites discribed in the documentation of the repository:
   https://github.com/AndreasExner/ioBroker-IoT-IndoorAirSensor
   
-  This sketch is based on my ioBroker IoT Framework V5
+  This sketch is based on my ioBroker IoT Framework V5.1.1
   https://github.com/AndreasExner/ioBroker-IoT-Framework
 
 
@@ -44,6 +44,7 @@
 #define BME280_active
 #define BME680_active
 #define SCD30_active
+//#define SPS30_active
 //#define WindSensor_active
 
 //+++++++++++++++++++++++++++++++++++++++++ generic device section +++++++++++++++++++++++++++++++++++++++++++++++++
@@ -161,13 +162,11 @@ String URL_PRESL = "http://192.168.1.240:8087/getPlainValue/daswetter.0.NextHour
 bool SCD30_activated = false;
 
 SCD30 airSensor;
-int scd30_altitude = 169; //sensors's altitude (m over sealevel)
 int scd30_interval = 3; // intervall in sec.
 int scd30_offset = 2; // temperature offset
 
-String scd30_autoCalHistory = "false";
 String scd30_co2, scd30_humi, scd30_temp;
-String URL_co2, URL_SCD30_autoCal_get;
+String URL_co2, URL_SCD30_autoCal;
 
 //######################################### setup ##############################################################
 
@@ -226,7 +225,7 @@ void build_urls() {
   URL_airp = baseURL_DATA_SET + "airp?value="; 
 
   URL_co2 = baseURL_DATA_SET + "co2?value=";
-  URL_SCD30_autoCal_get = baseURL_DATA_GET + "SCD30_autoCal";
+  URL_SCD30_autoCal = baseURL_DATA_GET + "SCD30_autoCal";
 }
 
 void send_data() {
@@ -311,14 +310,14 @@ void loop(void) {
 
       get_dynamic_config();
       build_urls();
-      
+
       if (sensor_active && BME280_activated && BME680_activated  && SCD30_activated) {send_data();}
       if (sensor_active && BME680_activated) {BME680_reset();}
 
       if (sensor_active && BME680_activated == false) {BME680_setup();}
       if (sensor_active && BME280_activated == false) {BME280_setup();}
       if (sensor_active && SCD30_activated == false) {SCD30_setup();}
-
+      
       if (sensor_active && BME280_activated) {BME280_get_sealevel_pressure();}
       if (sensor_active && SCD30_activated) {SCD30_AutoCal();}
 
