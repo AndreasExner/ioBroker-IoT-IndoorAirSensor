@@ -44,6 +44,7 @@ Version: F5_1.3 (release) 2020-12-02
   - Adafruit_BME280_Library version 2.1.2
   - BSEC-Arduino-library 1.6.1480
   - SparkFun_SCD30_Arduino_Library release 9
+    **Important:** This sketch requires two additional functions: https://github.com/sparkfun/SparkFun_SCD30_Arduino_Library/pulls
 - Hardware
   - NodeMCU Lolin V3 (ESP8266MOD 12-F)
   - GY-BME280
