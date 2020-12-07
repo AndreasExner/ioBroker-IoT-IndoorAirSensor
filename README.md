@@ -6,6 +6,7 @@
 
 **Please refer to this documentation for the the basic setup and configuration.**
 
+Required Version: 5.1.1 (or higher)
 
 
 ## Description
