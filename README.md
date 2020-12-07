@@ -245,12 +245,43 @@ Every n-th tick, defined by the **`Interval`**,  the following sequence will pro
   - Check BME680 sensor
 
 
-
 ## Appendix
 
 #### BME680 / BSEC
 
 The Bosch BSEC library uses precompiled libraries. You need to make some changes to the ESP8266 plattform.txt file to allow and include precompiled libraries:
 
+1. find the plattform.txt file for your hardware package. The default path on a Windows PC should be for example: 
 
+   ```
+   C:\Users\<username>\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4
+   ```
 
+   
+
+2. Add the line "compiler.libraries.ldflags=" (block starts at line #82):
+
+   ```c++
+   # These can be overridden in platform.local.txt
+   compiler.c.extra_flags=
+   compiler.c.elf.extra_flags=
+   compiler.S.extra_flags=
+   compiler.cpp.extra_flags=
+   compiler.ar.extra_flags=
+   compiler.objcopy.eep.extra_flags=
+   compiler.elf2hex.extra_flags=
+   #### added for BSEC
+   compiler.libraries.ldflags=
+   ```
+
+   
+
+3. Change the line "Combine gc-sections, archives, and objects" (starts at line #113) and add "{compiler.libraries.ldflags}" directive at the suggested position:
+
+   ```
+   ## Combine gc-sections, archives, and objects
+   # recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" {build.exception_flags} -Wl,-Map "-Wl,{build.path}/{build.project_name}.map" {compiler.c.elf.flags} {compiler.c.elf.extra_flags} -o "{build.path}/{build.project_name}.elf" -Wl,--start-group {object_files} "{archive_file_path}" {compiler.c.elf.libs} -Wl,--end-group  "-L{build.path}"
+   #### changed for BSEC
+   recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" {build.exception_flags} -Wl,-Map "-Wl,{build.path}/{build.project_name}.map" {compiler.c.elf.flags} {compiler.c.elf.extra_flags} -o "{build.path}/{build.project_name}.elf" -Wl,--start-group {object_files} "{archive_file_path}" {compiler.c.elf.libs} {compiler.libraries.ldflags} -Wl,--end-group  "-L{build.path}"
+   
+   ```
