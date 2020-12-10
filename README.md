@@ -29,7 +29,7 @@ I've decided to add an ePaper display (Waveshare 1.54inch e-Paper Module) as a l
 
 All sensors are connected with via I2C. Ensure an unique address for each sensor. 
 
-![](https://github.com/AndreasExner/ioBroker-IoT-IndoorAirSensor/blob/main/IndoorAirSensor_Steckplatine.jpg?raw=true)
+![](https://github.com/AndreasExner/ioBroker-IoT-IndoorAirSensor/blob/main/IndoorAirSensor_Steckplatine_V2.jpg?raw=true)
 
 
 
