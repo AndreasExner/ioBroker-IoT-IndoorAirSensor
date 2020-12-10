@@ -6,7 +6,7 @@
 
 **Please refer to this documentation for the the basic setup and configuration.**
 
-Required Version: 5.1.1 (or higher)
+Required Version: 5.3.0 (or higher)
 
 
 ## Description
@@ -21,6 +21,8 @@ In the end, these three sensors are able to provide a very precise collection of
 2. BME680: IAQ and VOCe
 3. SCD30: CO2
 
+I've decided to add an ePaper display (Waveshare 1.54inch e-Paper Module) as a local display to read the values right from the device. The ePaper needs no backlight and don't produce irritating light in the room. For example, in the bedroom. 
+
 
 
 #### Wiring
@@ -33,7 +35,12 @@ All sensors are connected with via I2C. Ensure an unique address for each sensor
 
 ## History
 
-Version: F5_1.3 (release) 2020-12-02
+F5_2.0 (release) 2020-12-10
+
+- added ePaper Display
+- minor bug fixes and cleanups
+
+F5_1.3 (release) 2020-12-02
 
 
 
@@ -46,11 +53,13 @@ Version: F5_1.3 (release) 2020-12-02
   - BSEC-Arduino-library 1.6.1480
   - SparkFun_SCD30_Arduino_Library release 9
     **Important:** This sketch requires two additional functions: https://github.com/sparkfun/SparkFun_SCD30_Arduino_Library/pulls
+  - GxEPD library 3.1.0
 - Hardware
   - NodeMCU Lolin V3 (ESP8266MOD 12-F)
   - GY-BME280
   - CJMCU-680 BME680
   - Sensirion SCD30
+  - Waveshare 1.54inch e-Paper Module
 
 
 
@@ -69,8 +78,8 @@ Version: F5_1.3 (release) 2020-12-02
 ## Setup
 
 - Create a folder in your Arduino library folder
-- Copy the primary sketch (e.g. IndoorAirSensor_1.3.ino) and the extension file (AEX_iobroker_IoT_Framework.ino) into the folder
-- Open the primary sketch (e.g. IndoorAirSensor_1.3.ino) 
+- Copy the primary sketch (e.g. IndoorAirSensor.ino) and the extension file (AEX_iobroker_IoT_Framework.ino) into the folder
+- Open the primary sketch (e.g. IndoorAirSensor.ino) 
 - **Install required libraries into your Arduino IDE**
 - Create (import) the datapoints in iobroker
   - 0_userdata.0.IoT-Devices.04.json (generic device configuration and monitoring)
@@ -152,28 +161,28 @@ The default path for the devices root folder is: **`0_userdata.0.IoT-Devices`**.
 
 - **`SensorName`** Easy to understand name for the sensor. Not used in the code.
 
-- **`baseURL_GET_DEV`** points to the IoT-Dev datapoints in iobroker (e.g. 0_userdata.0.IoT-Dev.DEV)
+- **`baseURL_GET_DEV`** points to the IoT-Dev datapoints in iobroker
 
   - ```
-    http://192.168.1.240:8087/getPlainValue/0_userdata.0.IoT-Dev.DEV.
+    http://192.168.1.240:8087/getPlainValue/0_userdata.0.IoT-Dev.IndorAirSensor.
     ```
 
-- **`baseURL_SET_DEV`** points to the IoT-Dev datapoints in iobroker (e.g. 0_userdata.0.IoT-Dev.DEV)
+- **`baseURL_SET_DEV`** points to the IoT-Dev datapoints in iobroker
 
   - ```
-    http://192.168.1.240:8087/set/0_userdata.0.IoT-Dev.DEV.
+    http://192.168.1.240:8087/set/0_userdata.0.IoT-Dev.IndorAirSensor.
     ```
 
-- **`baseURL_GET_PROD`** points to the IoT datapoints in iobroker (e.g. 0_userdata.0.IoT.Weather)
+- **`baseURL_GET_PROD`** points to the IoT datapoints in iobroker
 
   - ```
-    http://192.168.1.240:8087/getPlainValue/0_userdata.0.IoT.Weather.
+    http://192.168.1.240:8087/getPlainValue/0_userdata.0.IoT.IndorAirSensor.
     ```
 
-- **`baseURL_SET_PROD`** points to the IoT datapoints in iobroker (e.g. 0_userdata.0.IoT.Weather)
+- **`baseURL_SET_PROD`** points to the IoT datapoints in iobroker
 
   - ```
-    http://192.168.1.240:8087/set/0_userdata.0.IoT.Weather.
+    http://192.168.1.240:8087/set/0_userdata.0.IoT.IndorAirSensor.
     ```
 
 
@@ -202,6 +211,26 @@ These datapoints are for output only:
 - **`iaSA, iaDA`** IAQ accuracy static, IAQ accuracy dynamic (BME680)
 - **`VOCe`** VOC equivalent, in mg/m³ (BME680)
 - **`co2`** CO2 concentration in ppm (SCD30)
+
+This datapoint is used to provide a time string of the last update to the device
+
+- **`LastUpdate`** LastUpdate String
+
+
+
+## LastUpdate string
+
+Because the device has no real time clock, it is required to provide a timestamp string for the last update event. This is important, because the ePaper display does not change or goes down, even when the device is unplugged. That can lead into confusion and totally wrong values on the display. The timestamp string allows the user to validate that the device is working well.
+
+This iobroker script is used to provide this string, triggered by an update of the IP address datapoint:
+
+```javascript
+on({id: "0_userdata.0.IoT-Devices.04.SensorIP", change: "any"}, function (obj) {
+  var value = obj.state.val;
+  var oldValue = obj.oldState.val;
+  setState("0_userdata.0.IoT.IndoorAirSensor02.LastUpdate", ([formatDate(new Date(), "DD.MM."),' - ',formatDate(new Date(), "hh:mm")].join('')), true);
+});
+```
 
 
 
@@ -235,6 +264,8 @@ Every n-th tick, defined by the **`Interval`**,  the following sequence will pro
     - Get the dynamic configuration from iobroker (generic devices section)
     - Build specific device URL's (based on the dynamic configuration)
     - Send data to iobroker
+    - Get LastUpdate
+    - Show data on ePaper display
     - Check reset flag for BM680 and execute reset if requested
     - Run setup for inactive sensors (if activated now)
     - Update the sealevel pressure as reference for the altitude for BME280 from iobroker (internet source)
