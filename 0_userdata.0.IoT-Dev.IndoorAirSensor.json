@@ -39,7 +39,7 @@
       "role": "",
       "type": "boolean",
       "read": true,
-      "write": true
+      "write": true,
       "custom": {
         "sql.0": {
           "enabled": true,
