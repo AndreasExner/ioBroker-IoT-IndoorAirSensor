@@ -2,13 +2,13 @@
 
   Indoor air sensor for iobroker IoT Framework
 
-  Version: F5_1.3.1 (release)
-  Date: 2020-12-03
+  Version: F5_2.0 (release)
+  Date: 2020-12-10
 
   This sketch has several prerquisites discribed in the documentation of the repository:
   https://github.com/AndreasExner/ioBroker-IoT-IndoorAirSensor
   
-  This sketch is based on my ioBroker IoT Framework V5.1.1
+  This sketch is based on my ioBroker IoT Framework V5.3.0 (or higher)
   https://github.com/AndreasExner/ioBroker-IoT-Framework
 
 
@@ -46,6 +46,7 @@
 #define SCD30_active
 //#define SPS30_active
 //#define WindSensor_active
+#define ePaper_active
 
 //+++++++++++++++++++++++++++++++++++++++++ generic device section +++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -67,7 +68,7 @@ int interval = 10;  // waiting time for the first masurement and fallback on err
 */
 
 bool DevMode = true; //enable DEV mode on boot (do not change)
-bool debug = false; //debug to serial monitor
+bool debug = true; //debug to serial monitor
 bool led = true; //enable external status LED on boot
 bool sensor_active = false; // dectivate sensor(s) on boot (do not change)
 
@@ -100,6 +101,25 @@ String URL_SID, URL_INT; // URL's for sensor ID and interval
 #define LED D4 // gpio pin for external status LED
 void(* HWReset) (void) = 0; // define reset function DO NOT CHANGE
 int counter = interval;  // countdown for next interval
+
+//+++++++++++++++++++++++++++++++++++++++++ ePaper Display section +++++++++++++++++++++++++++++++++++++++++++++++++
+
+#include <GxEPD.h>
+
+#include <GxGDEH0154D67/GxGDEH0154D67.h>  // 1.54" b/w
+
+#include <GxIO/GxIO_SPI/GxIO_SPI.h>
+#include <GxIO/GxIO.h>
+
+#include <Fonts/FreeMonoBold9pt7b.h>
+#include <Fonts/FreeMonoBold18pt7b.h>
+#include <Fonts/FreeSans9pt7b.h>
+
+GxIO_Class io(SPI, /*CS=D8*/ SS, /*DC=D3*/ 0, /*RST=D6*/ 12);
+GxEPD_Class display(io, /*RST=D6*/ 12, /*BUSY=D0*/ 16);
+
+String URL_LastUpdate;
+String LastUpdate;
 
 //+++++++++++++++++++++++++++++++++++++++++ BME680 section +++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -199,6 +219,11 @@ void setup(void) {
   if (sensor_active) {BME280_setup();}
   if (sensor_active) {SCD30_setup();}
 
+// ePaper display setup
+
+  display.init();
+  display.eraseDisplay();
+  ePaper_showBlank();
 }
 
 //######################################### specific device functions #######################################################
@@ -223,6 +248,8 @@ void build_urls() {
   URL_temp = baseURL_DATA_SET + "temp?value=";
   URL_humi = baseURL_DATA_SET + "humi?value=";
   URL_airp = baseURL_DATA_SET + "airp?value="; 
+
+  URL_LastUpdate = baseURL_DATA_GET + "LastUpdate";
 
   URL_co2 = baseURL_DATA_SET + "co2?value=";
   URL_SCD30_autoCal = baseURL_DATA_GET + "SCD30_autoCal";
@@ -275,6 +302,81 @@ void send_data() {
   http.end();
 } 
 
+//######################################### ePaper display functions ########################################################
+
+void ePaper_showData()
+  {
+  const GFXfont* font_b = &FreeMonoBold18pt7b;
+  const GFXfont* font_a = &FreeMonoBold9pt7b;
+  const GFXfont* font_c = &FreeSans9pt7b;
+  
+  display.fillScreen(GxEPD_WHITE);
+  display.setTextColor(GxEPD_BLACK);
+
+  display.setCursor(0, 10);
+  display.setFont(font_a);
+  display.println("Temperatur:");
+  display.setCursor(10, 45);
+  display.setFont(font_b);
+  display.println(temp + " °C");
+
+  display.setCursor(0, 70);
+  display.setFont(font_a);
+  display.println("Rel. Luftfeuchte:");
+  display.setCursor(10, 102);  
+  display.setFont(font_b);
+  display.println(bme280_humi + " %");
+
+  display.setCursor(0, 132);
+  display.setFont(font_a);
+  display.println("CO2 Gehalt:");
+  display.setCursor(10, 163);
+  display.setFont(font_b);
+  display.println(scd30_co2 + " ppm");
+
+  display.setCursor(0, 197);
+  display.setFont(font_c);
+  display.println("Stand: " + LastUpdate);
+  
+  display.update();
+}
+
+void ePaper_showBlank()
+  {
+  const GFXfont* font_b = &FreeMonoBold18pt7b;
+  const GFXfont* font_a = &FreeMonoBold9pt7b;
+  const GFXfont* font_c = &FreeSans9pt7b;
+  
+  display.fillScreen(GxEPD_WHITE);
+  display.setTextColor(GxEPD_BLACK);
+
+  display.setCursor(0, 10);
+  display.setFont(font_a);
+  display.println("Temperatur:");
+  display.setCursor(10, 45);
+  display.setFont(font_b);
+  display.println("--- °C");
+
+  display.setCursor(0, 70);
+  display.setFont(font_a);
+  display.println("Rel. Luftfeuchte:");
+  display.setCursor(10, 102);  
+  display.setFont(font_b);
+  display.println("--- %");
+
+  display.setCursor(0, 132);
+  display.setFont(font_a);
+  display.println("CO2 Gehalt:");
+  display.setCursor(10, 163);
+  display.setFont(font_b);
+  display.println("--- ppm");
+
+  display.setCursor(0, 197);
+  display.setFont(font_c);
+  display.println("-------------");
+  
+  display.update();
+}
 
 //####################################################################
 // Loop
@@ -305,13 +407,24 @@ void loop(void) {
       
     if (counter == 0) { 
 
+      ePaper_showData();
+      
       get_wifi_state();
       send_ip();
 
       get_dynamic_config();
       build_urls();
-
-      if (sensor_active && BME280_activated && BME680_activated  && SCD30_activated) {send_data();}
+      
+      if (sensor_active && BME280_activated && BME680_activated  && SCD30_activated) {
+        send_data();
+        ePaper_get_LastUpdate();
+        ePaper_showData();
+      }
+      else
+      {
+        ePaper_showBlank();
+      }
+      
       if (sensor_active && BME680_activated) {BME680_reset();}
 
       if (sensor_active && BME680_activated == false) {BME680_setup();}
