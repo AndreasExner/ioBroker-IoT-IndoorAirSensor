@@ -434,8 +434,8 @@
       "state": 1636
     }
   },
-    "0_userdata.0.IoT-Dev.IndoorAirSensor02.ePaperDisplay_active": {
-    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor02.ePaperDisplay_active",
+    "0_userdata.0.IoT.IndoorAirSensor.ePaperDisplay_active": {
+    "_id": "0_userdata.0.IoT.IndoorAirSensor.ePaperDisplay_active",
     "type": "state",
     "common": {
       "name": "ePaperDisplay_active",
