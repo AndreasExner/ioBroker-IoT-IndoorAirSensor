@@ -140,9 +140,7 @@ void send_ErrorLog(String Error_Msg) {
 
 void get_interval() {
 
-  if (debug) {
-    Serial.println("### get_interval");
-  }
+  if (debug) {Serial.println("### get_interval");}
 
   HTTPClient http;
 
@@ -151,9 +149,7 @@ void get_interval() {
   http.GET();
 
   interval = http.getString().toInt();
-  if (debug) {
-    Serial.println("    New Interval = " + String(interval));
-  }
+  if (debug) {Serial.println("    New Interval = " + String(interval));}
 
   http.end();
 }
@@ -382,7 +378,7 @@ void ePaper_setup() {
 
   display.init();
   display.eraseDisplay();
-  ePaper_showBlank();
+  ePaper_showData_1_54_3fields("Temperatur:", "Rel. Luftfeuchte:", "CO2 Gehalt:", "--.-- °C", "--.-- %", "---- ppm", "Stand: ----------");
   ePaperDisplay_activated = true;
 }
 
@@ -424,6 +420,43 @@ void ePaper_get_dynamic_config() {
     Serial.println("    New SePaperDisplay_active setting = " + bool_to_string(ePaperDisplay_active));  
   }
   http.end();
+}
+
+void ePaper_showData_1_54_3fields(String field1_name, String field2_name, String field3_name, String field1_value, String field2_value, String field3_value, String ts_update) {
+  
+  const GFXfont* font_b = &FreeMonoBold18pt7b;
+  const GFXfont* font_a = &FreeMonoBold9pt7b;
+  const GFXfont* font_c = &FreeSans9pt7b;
+  
+  display.fillScreen(GxEPD_WHITE);
+  display.setTextColor(GxEPD_BLACK);
+
+  display.setCursor(0, 10);
+  display.setFont(font_a);
+  display.println(field1_name);
+  display.setCursor(10, 45);
+  display.setFont(font_b);
+  display.println(field1_value);
+
+  display.setCursor(0, 70);
+  display.setFont(font_a);
+  display.println(field2_name);
+  display.setCursor(10, 102);  
+  display.setFont(font_b);
+  display.println(field2_value);
+
+  display.setCursor(0, 132);
+  display.setFont(font_a);
+  display.println(field3_name);
+  display.setCursor(10, 163);
+  display.setFont(font_b);
+  display.println(field3_value);
+
+  display.setCursor(10, 197);
+  display.setFont(font_c);
+  display.println(ts_update);
+  
+  display.update();
 }
 
 #endif
@@ -811,7 +844,7 @@ void SCD30_AutoCal() {
   if (debug) {Serial.println("### SCD30_AutoCal");}
 
   String scd30_autoCal_get = bool_to_string(airSensor.getAutoSelfCalibration());
-  Serial.println("    scd30_autoCal_get = " + scd30_autoCal_get);
+  if (debug) {Serial.println("    scd30_autoCal_get = " + scd30_autoCal_get);}
 
   HTTPClient http;
 
