@@ -2,13 +2,13 @@
 
   Indoor air sensor for iobroker IoT Framework
 
-  Version: F5_2.0 (release)
+  Version: F5_2.1 (ePaper improvements)
   Date: 2020-12-10
 
   This sketch has several prerquisites discribed in the documentation of the repository:
   https://github.com/AndreasExner/ioBroker-IoT-IndoorAirSensor
   
-  This sketch is based on my ioBroker IoT Framework V5.3.0 (or higher)
+  This sketch is based on my ioBroker IoT Framework V5.3.1 (or higher)
   https://github.com/AndreasExner/ioBroker-IoT-Framework
 
 
@@ -56,9 +56,9 @@
 // device settings - change settings to match your requirements
 
 const char* ssid     = "<ssid>"; // Wifi SSID
-const char* password = "<password>"; //Wifi password
+const char* password = "<password"; //Wifi password
 
-String SensorID = "04"; //predefinded sensor ID, DEV by default to prevent overwriting productive data
+String SensorID = "06"; //predefinded sensor ID, DEV by default to prevent overwriting productive data
 
 int interval = 10;  // waiting time for the first masurement and fallback on error reading interval from iobroker
 
@@ -118,8 +118,10 @@ int counter = interval;  // countdown for next interval
 GxIO_Class io(SPI, /*CS=D8*/ SS, /*DC=D3*/ 0, /*RST=D6*/ 12);
 GxEPD_Class display(io, /*RST=D6*/ 12, /*BUSY=D0*/ 16);
 
-String URL_LastUpdate;
+String URL_LastUpdate, URL_ePaperDisplay_active;
 String LastUpdate;
+bool ePaperDisplay_active = false;
+bool ePaperDisplay_activated = false;
 
 //+++++++++++++++++++++++++++++++++++++++++ BME680 section +++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -218,12 +220,8 @@ void setup(void) {
   if (sensor_active) {BME680_setup();}
   if (sensor_active) {BME280_setup();}
   if (sensor_active) {SCD30_setup();}
+  if (ePaperDisplay_active) {ePaper_setup();}
 
-// ePaper display setup
-
-  display.init();
-  display.eraseDisplay();
-  ePaper_showBlank();
 }
 
 //######################################### specific device functions #######################################################
@@ -250,6 +248,7 @@ void build_urls() {
   URL_airp = baseURL_DATA_SET + "airp?value="; 
 
   URL_LastUpdate = baseURL_DATA_GET + "LastUpdate";
+  URL_ePaperDisplay_active = baseURL_DATA_GET + "ePaperDisplay_active";
 
   URL_co2 = baseURL_DATA_SET + "co2?value=";
   URL_SCD30_autoCal = baseURL_DATA_GET + "SCD30_autoCal";
@@ -407,20 +406,20 @@ void loop(void) {
       
     if (counter == 0) { 
 
-      ePaper_showData();
-      
       get_wifi_state();
       send_ip();
 
       get_dynamic_config();
       build_urls();
       
-      if (sensor_active && BME280_activated && BME680_activated  && SCD30_activated) {
-        send_data();
+      if (sensor_active && BME280_activated && BME680_activated  && SCD30_activated) {send_data();}
+
+      if (sensor_active && ePaperDisplay_active && ePaperDisplay_activated) {
+
         ePaper_get_LastUpdate();
         ePaper_showData();
       }
-      else
+      else if (!sensor_active && ePaperDisplay_active && ePaperDisplay_activated)
       {
         ePaper_showBlank();
       }
@@ -433,6 +432,8 @@ void loop(void) {
       
       if (sensor_active && BME280_activated) {BME280_get_sealevel_pressure();}
       if (sensor_active && SCD30_activated) {SCD30_AutoCal();}
+
+      if (ePaperDisplay_active && !ePaperDisplay_activated) {ePaper_setup();}
 
       get_interval();
       counter = interval;
