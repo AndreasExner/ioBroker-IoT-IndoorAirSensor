@@ -416,8 +416,8 @@
       "state": 1636
     }
   },
-    "0_userdata.0.IoT-Dev.IndoorAirSensor02.LastUpdate": {
-    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor02.LastUpdate",
+    "0_userdata.0.IoT-Dev.IndoorAirSensor.LastUpdate": {
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.LastUpdate",
     "type": "state",
     "common": {
       "name": "LastUpdate",
@@ -433,6 +433,23 @@
       "ownerGroup": "system.group.administrator",
       "state": 1636
     }
+  },
+  "0_userdata.0.IoT-Dev.IndoorAirSensor.ePaperDisplay_active": {
+    "_id": "0_userdata.0.IoT-Dev.IndoorAirSensor.ePaperDisplay_active",
+    "type": "state",
+    "common": {
+      "name": "ePaperDisplay_active",
+      "role": "",
+      "type": "boolean",
+      "read": true,
+      "write": true
+    },
+    "native": {},
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator",
+      "state": 1636
+    }
   }
-
 }
