@@ -27,7 +27,7 @@ In the end, these three sensors are able to provide a very precise collection of
 
 I've decided to add an ePaper (Waveshare 1.54inch e-Paper Module) as local display to read the values right from the device. The ePaper needs no backlight and don't produce irritating light in the room. For example, in the bedroom. 
 
-The ePaper library is not yet integrated into the IoT Framework, except the "LastUpdate" function. The code varies very much, depending on the display type/size and the content. 
+The ePaper library is now integrated into the IoT Framework. However, only the 1.54 inch (200x200) b/w display is supported with a layout of three data fields and the "LastUpdate" string. Other layout may need changes to the code.  
 
 Please use the documentation of the repository for more information: [ZinggJM/GxEPD: A simple E-Paper display library with common base class and separate IO class for Arduino. (github.com)](https://github.com/ZinggJM/GxEPD)
 
@@ -67,7 +67,7 @@ F5_1.3 (release) 2020-12-02
   - GY-BME280
   - CJMCU-680 BME680
   - Sensirion SCD30
-  - Waveshare 1.54inch e-Paper Module
+  - Waveshare 1.54inch b/w e-Paper Module
 
 
 
@@ -127,7 +127,7 @@ bool sensor_active = false; // dectivate sensor(s) on boot (do not change)
 
 
 
-#### Base URL's
+#### Device base URL's
 
 ```c++
 /*
@@ -207,6 +207,7 @@ It is recommended to keep the datapoints in both sections identical to avoid err
 - **`Interval`** [100] Defines the delay between two data transmissions / measurements. **Important:** due to the behavior of the BSEC library, the loop takes more or less 3000ms. E.g, an interval of 100 results in a delay of 300 seconds (5 minutes).  
 - **`BME680_reset`** [false] Triggers a reset (EraseEEPROM) of the BME680 sensor when true. Flips back to false when the reset was done 
 - **`SCD30_autoCal`** [true] Enables the SCD30 ASC
+- **`ePaperDisplay_active`** [false] Enables the ePaper display. Do not set to true unless a display is attached
 
 These datapoints are for output only:
 
@@ -226,7 +227,43 @@ This datapoint is used to provide a time string of the last update to the device
 
 
 
-## LastUpdate string
+#### Build datapoint URL's function
+
+```c++
+void build_urls() {
+
+  URL_SID = baseURL_DATA_SET + "SensorID?value=" + SensorID;
+  URL_INT = baseURL_DATA_GET + "Interval";
+  
+  URL_BME680_updateState = baseURL_DATA_SET + "BME680_updateState?value=";
+  URL_BME680_loadState = baseURL_DATA_SET + "BME680_loadState?value=";
+  URL_BME680_eraseEEPROM = baseURL_DATA_SET + "BME680_eraseEEPROM?value=";
+  URL_BME680_reset_get = baseURL_DATA_GET + "BME680_reset";
+  URL_BME680_reset_set = baseURL_DATA_SET + "BME680_reset?value=";
+
+  URL_iaqD = baseURL_DATA_SET + "iaqD?value=";
+  URL_iaDA = baseURL_DATA_SET + "iaDA?value=";
+  URL_iaqS = baseURL_DATA_SET + "iaqS?value=";
+  URL_iaSA = baseURL_DATA_SET + "iaSA?value=";
+  URL_VOCe = baseURL_DATA_SET + "VOCe?value=";
+
+  URL_temp = baseURL_DATA_SET + "temp?value=";
+  URL_humi = baseURL_DATA_SET + "humi?value=";
+  URL_airp = baseURL_DATA_SET + "airp?value="; 
+
+  URL_LastUpdate = baseURL_DATA_GET + "LastUpdate";
+  URL_ePaperDisplay_active = baseURL_DATA_GET + "ePaperDisplay_active";
+
+  URL_co2 = baseURL_DATA_SET + "co2?value=";
+  URL_SCD30_autoCal = baseURL_DATA_GET + "SCD30_autoCal";
+}
+```
+
+These url's are pointing to the iobroker datapoints, defined in the json files and can be changed if required.
+
+
+
+## LastUpdate string iobroker script
 
 Because the device has no real time clock, it is required to provide a timestamp string for the last update event. This is important, because the ePaper display does not change or goes down, even when the device is unplugged. That can lead into confusion and totally wrong values on the display. The timestamp string allows the user to validate that the device is working well.
 
