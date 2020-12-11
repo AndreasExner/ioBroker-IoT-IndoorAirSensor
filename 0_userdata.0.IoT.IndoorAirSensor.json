@@ -416,8 +416,8 @@
       "state": 1636
     }
   },
-    "0_userdata.0.IoT.IndoorAirSensor02.LastUpdate": {
-    "_id": "0_userdata.0.IoT.IndoorAirSensor02.LastUpdate",
+    "0_userdata.0.IoT.IndoorAirSensor.LastUpdate": {
+    "_id": "0_userdata.0.IoT.IndoorAirSensor.LastUpdate",
     "type": "state",
     "common": {
       "name": "LastUpdate",
