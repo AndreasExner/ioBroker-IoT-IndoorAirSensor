@@ -21,7 +21,15 @@ In the end, these three sensors are able to provide a very precise collection of
 2. BME680: IAQ and VOCe
 3. SCD30: CO2
 
-I've decided to add an ePaper display (Waveshare 1.54inch e-Paper Module) as a local display to read the values right from the device. The ePaper needs no backlight and don't produce irritating light in the room. For example, in the bedroom. 
+
+
+#### ePaper Display
+
+I've decided to add an ePaper (Waveshare 1.54inch e-Paper Module) as local display to read the values right from the device. The ePaper needs no backlight and don't produce irritating light in the room. For example, in the bedroom. 
+
+The ePaper library is not yet integrated into the IoT Framework, except the "LastUpdate" function. The code varies very much, depending on the display type/size and the content. 
+
+Please use the documentation of the repository for more information: [ZinggJM/GxEPD: A simple E-Paper display library with common base class and separate IO class for Arduino. (github.com)](https://github.com/ZinggJM/GxEPD)
 
 
 
@@ -29,7 +37,7 @@ I've decided to add an ePaper display (Waveshare 1.54inch e-Paper Module) as a l
 
 All sensors are connected with via I2C. Ensure an unique address for each sensor. 
 
-![](https://github.com/AndreasExner/ioBroker-IoT-IndoorAirSensor/blob/main/IndoorAirSensor_Steckplatine_V2.jpg?raw=true)
+![](https://github.com/AndreasExner/ioBroker-IoT-IndoorAirSensor/blob/main/IndoorAirSensor_Steckplatine.jpg?raw=true)
 
 
 
@@ -309,7 +317,7 @@ The Bosch BSEC library uses precompiled libraries. You need to make some changes
 
 3. Change the line "Combine gc-sections, archives, and objects" (starts at line #113) and add "{compiler.libraries.ldflags}" directive at the suggested position:
 
-   ```
+   ```c++
    ## Combine gc-sections, archives, and objects
    # recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" {build.exception_flags} -Wl,-Map "-Wl,{build.path}/{build.project_name}.map" {compiler.c.elf.flags} {compiler.c.elf.extra_flags} -o "{build.path}/{build.project_name}.elf" -Wl,--start-group {object_files} "{archive_file_path}" {compiler.c.elf.libs} -Wl,--end-group  "-L{build.path}"
    #### changed for BSEC
