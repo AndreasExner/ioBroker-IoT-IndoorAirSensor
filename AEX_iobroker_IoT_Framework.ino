@@ -2,7 +2,7 @@
 
   Shared functions for iobroker IoT Framework
 
-  Version: V5.3.0
+  Version: V5.3.1
   Date: 2020-12-10
 
   Supported features / sensors:
@@ -378,6 +378,14 @@ String hex_to_string(uint8_t hex) {
 #ifdef ePaper_active
 //######################################### BME280 functions ########################################################
 
+void ePaper_setup() {
+
+  display.init();
+  display.eraseDisplay();
+  ePaper_showBlank();
+  ePaperDisplay_activated = true;
+}
+
 void ePaper_get_LastUpdate() {
 
   if (debug) {Serial.println("### get_ePaper_LastUpdate");}
@@ -393,6 +401,29 @@ void ePaper_get_LastUpdate() {
   LastUpdate.remove(LastUpdate.length() - 1, 1);
 
   if (debug) {Serial.println("    LastUpdate = " + LastUpdate);}
+}
+
+void ePaper_get_dynamic_config() {
+
+  if (debug) {Serial.println("### ePaper_get_dynamic_config");}
+
+  HTTPClient http;
+
+  // Get ePaperDisplay_active
+
+  http.begin(URL_ePaperDisplay_active);
+  http.GET();
+  if (http.getString() == "true") {
+    ePaperDisplay_active = true;
+  }
+  else {
+    ePaperDisplay_active = false;
+  }
+
+  if (debug) {
+    Serial.println("    New SePaperDisplay_active setting = " + bool_to_string(ePaperDisplay_active));  
+  }
+  http.end();
 }
 
 #endif
