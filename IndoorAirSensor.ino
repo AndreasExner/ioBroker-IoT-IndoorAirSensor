@@ -8,7 +8,7 @@
   This sketch has several prerquisites discribed in the documentation of the repository:
   https://github.com/AndreasExner/ioBroker-IoT-IndoorAirSensor
   
-  This sketch is based on my ioBroker IoT Framework V5.3.1 (or higher)
+  This sketch is based on my ioBroker IoT Framework V5.3.0 (or higher)
   https://github.com/AndreasExner/ioBroker-IoT-Framework
 
 
@@ -56,9 +56,9 @@
 // device settings - change settings to match your requirements
 
 const char* ssid     = "<ssid>"; // Wifi SSID
-const char* password = "<password"; //Wifi password
+const char* password = "<password>"; //Wifi password
 
-String SensorID = "06"; //predefinded sensor ID, DEV by default to prevent overwriting productive data
+String SensorID = "04"; //predefinded sensor ID, DEV by default to prevent overwriting productive data
 
 int interval = 10;  // waiting time for the first masurement and fallback on error reading interval from iobroker
 
@@ -212,6 +212,7 @@ void setup(void) {
   send_ip();
   send_sid();
   send_rst();
+  ePaper_get_dynamic_config();
      
   debug = debug_state;
 
@@ -301,82 +302,6 @@ void send_data() {
   http.end();
 } 
 
-//######################################### ePaper display functions ########################################################
-
-void ePaper_showData()
-  {
-  const GFXfont* font_b = &FreeMonoBold18pt7b;
-  const GFXfont* font_a = &FreeMonoBold9pt7b;
-  const GFXfont* font_c = &FreeSans9pt7b;
-  
-  display.fillScreen(GxEPD_WHITE);
-  display.setTextColor(GxEPD_BLACK);
-
-  display.setCursor(0, 10);
-  display.setFont(font_a);
-  display.println("Temperatur:");
-  display.setCursor(10, 45);
-  display.setFont(font_b);
-  display.println(temp + " °C");
-
-  display.setCursor(0, 70);
-  display.setFont(font_a);
-  display.println("Rel. Luftfeuchte:");
-  display.setCursor(10, 102);  
-  display.setFont(font_b);
-  display.println(bme280_humi + " %");
-
-  display.setCursor(0, 132);
-  display.setFont(font_a);
-  display.println("CO2 Gehalt:");
-  display.setCursor(10, 163);
-  display.setFont(font_b);
-  display.println(scd30_co2 + " ppm");
-
-  display.setCursor(0, 197);
-  display.setFont(font_c);
-  display.println("Stand: " + LastUpdate);
-  
-  display.update();
-}
-
-void ePaper_showBlank()
-  {
-  const GFXfont* font_b = &FreeMonoBold18pt7b;
-  const GFXfont* font_a = &FreeMonoBold9pt7b;
-  const GFXfont* font_c = &FreeSans9pt7b;
-  
-  display.fillScreen(GxEPD_WHITE);
-  display.setTextColor(GxEPD_BLACK);
-
-  display.setCursor(0, 10);
-  display.setFont(font_a);
-  display.println("Temperatur:");
-  display.setCursor(10, 45);
-  display.setFont(font_b);
-  display.println("--- °C");
-
-  display.setCursor(0, 70);
-  display.setFont(font_a);
-  display.println("Rel. Luftfeuchte:");
-  display.setCursor(10, 102);  
-  display.setFont(font_b);
-  display.println("--- %");
-
-  display.setCursor(0, 132);
-  display.setFont(font_a);
-  display.println("CO2 Gehalt:");
-  display.setCursor(10, 163);
-  display.setFont(font_b);
-  display.println("--- ppm");
-
-  display.setCursor(0, 197);
-  display.setFont(font_c);
-  display.println("-------------");
-  
-  display.update();
-}
-
 //####################################################################
 // Loop
   
@@ -411,17 +336,19 @@ void loop(void) {
 
       get_dynamic_config();
       build_urls();
-      
+
       if (sensor_active && BME280_activated && BME680_activated  && SCD30_activated) {send_data();}
 
+      ePaper_get_dynamic_config();
+      if (ePaperDisplay_active && !ePaperDisplay_activated) {ePaper_setup();}
       if (sensor_active && ePaperDisplay_active && ePaperDisplay_activated) {
 
         ePaper_get_LastUpdate();
-        ePaper_showData();
+        ePaper_showData_1_54_3fields("Temperatur:", "Rel. Luftfeuchte:", "CO2 Gehalt:", temp + " °C", bme280_humi + " %", scd30_co2 + " ppm", "Stand: " + LastUpdate);
       }
       else if (!sensor_active && ePaperDisplay_active && ePaperDisplay_activated)
       {
-        ePaper_showBlank();
+        ePaper_showData_1_54_3fields("Temperatur:", "Rel. Luftfeuchte:", "CO2 Gehalt:", "--.-- °C", "--.-- %", "---- ppm", "Stand: ----------");
       }
       
       if (sensor_active && BME680_activated) {BME680_reset();}
@@ -433,7 +360,6 @@ void loop(void) {
       if (sensor_active && BME280_activated) {BME280_get_sealevel_pressure();}
       if (sensor_active && SCD30_activated) {SCD30_AutoCal();}
 
-      if (ePaperDisplay_active && !ePaperDisplay_activated) {ePaper_setup();}
 
       get_interval();
       counter = interval;
